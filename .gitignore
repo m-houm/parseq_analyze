@@ -1,0 +1,9 @@
+!.gitignore
+*.fasta
+*.fastq
+*.gz
+*.csv
+*.txt
+!*barcode_map.csv
+!*.py
+!*ipynb
