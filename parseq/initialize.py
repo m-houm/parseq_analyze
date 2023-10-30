@@ -1,4 +1,5 @@
-from utils import copy_file_cmd, unzip_file_cmd, write_json_file, load_json_file
+from .utils import copy_file_cmd, unzip_file_cmd, write_json_file, load_json_file, fastq_file_read_stats
+from .visualizations import  fastq_sequence_length_histogram 
 import os
 import datetime
 import matplotlib.pyplot as plt
@@ -99,6 +100,7 @@ def initialize_run_json_file(run_name:str,output_directory:str,json_file_path:st
     
         'fastq_source_file' : plate_naming_scheme[plate],
         'fastq_destination_file' : run_plates[plate],
+        'raw_fastq_length_histogram' : 'path/to/raw/fastq/length/histogram/file',
         'raw_file_stats' : 
             {
             'num_sequences': 000000, 
@@ -121,6 +123,7 @@ def initialize_run_json_file(run_name:str,output_directory:str,json_file_path:st
             },
             
         'fastp_folder_output_path' : 'path/to/fastp/output/file',
+        'post_fastp_length_histogram' : 'path/to/post/fastp/length/histogram/file',
         'cnst_fwd_read' : '',
         'freebarcodes_decoded_file_path' : 'path/to/freebarcodes/output/file',
         'demultiplexed_folder_output_path' : 'path/to/demultiplexed/fastq/file',
@@ -139,87 +142,59 @@ def initialize_run_json_file(run_name:str,output_directory:str,json_file_path:st
     
     return None
     
-  
-    
-def fastq_sequence_length_histogram(plate,lengths, stats_dict, output_directory_abs_path:str): 
-    
-    """
-    Arguments:
-    - plate: name of the plate
-    - lengths: list of lengths of sequences
-    - stats_dict: dictionary with stats of the plate
-    - output_directory_abs_path: absolute path to the output directory
-    
-    Actions:
-    - Plots histogram of sequence lengths
-    - Prints stats dictionary of the plate on the histogram
-    - Saves histogram to output directory
-    - Prints stats dictionary of the plate to console
-    
-    Returns:
-    None
-    """
+ 
 
-    
-    #get the legths of sequences, along with some statistics
-    num_sequences = stats_dict["num_sequences"]
-    mean_length = stats_dict["mean_length"]
-    median_length = stats_dict["median_length"]
-    min_length = stats_dict["min_length"]
-    max_length = stats_dict["max_length"]
-    std_length = stats_dict["length_std"]
-    
-    #plot histogram
-    sns.set(rc={"figure.dpi": 300, "savefig.dpi": 300})
-    sns.set_style("white")
-    sns.set_context("paper")
-    sns.set_palette("colorblind")
-    sns.histplot(lengths, bins=100, kde=False)
-    plt.xlabel("Sequence length (bp)")
-    plt.ylabel("Count")
-    plt.title(f"Sequence length histogram for {plate}")
-    
-    #add legend with number of sequences, mean, median, min, max std
-    plt_text = f"number of sequences: {num_sequences}\nmean len: {mean_length:.0f}\nmedian len: {median_length:.0f}\nmin len: {min_length}\nmax len: {max_length}\nlen std: {std_length:.0f}"
-    plt.text(0.95, 0.95, plt_text, verticalalignment='top', horizontalalignment='right', transform=plt.gca().transAxes, fontsize=12)
-    
-    plt.savefig(os.path.join(output_directory_abs_path,f"{plate}_sequence_length_histogram.png"))
-    plt.show()
-    print(f"Sequence length histogram for {plate} saved to {output_directory_abs_path}")
-    
-    return None
-    
-    
-  
-
-def raw_stats_update_json_file(json_file_path:str,plate:str,plate_raw_stats_dictionary:dict):
+def raw_fastq_stats_and_length_histograms(run_json_file_path:str, histograms_output_path:str):
     """
     Arguments:
     - json_file_path: path to the json file
-    - plate: name of the plate
-    - plate_raw_stats_dictionary: dictionary with stats of the plate
+    - histograms_output_path: path to the output directory
     
     Actions:
-    - Updates the json file with the stats of the plate
+    - Updates the json file with the raw fastq stats of the plate fastq file
+    - Generates, saves, and plots the raw fastq length histogram of the plate fastq file
     
     Returns:
     None
     """
     
-    
+    #load json file
+    run_dictionary = load_json_file(run_json_file_path)
         
-    run_dictionary=load_json_file(json_file_path)
-    
-    
+    for item in run_dictionary.items():
+        plate = item[0]
+        if plate == 'run_info':
+            pass
+        else:
+            input_file_abs_path = run_dictionary[plate]['fastq_destination_file']
+            
+            #get the legths of sequences, along with some statistics
+            lengths, stats_dictionary = fastq_file_read_stats(input_file_abs_path)
+            plot_path = fastq_sequence_length_histogram(plate,lengths, stats_dictionary, histograms_output_path, show_plot=True)
+            
+            #print stats to console
+            print(f" Stats Dictionary for plate {plate}:")
+            for item in stats_dictionary.items():
+                print(item[0],":",item[1])
+                
+            
+            #save to dictionary
+            run_dictionary[plate]['post_fastp_length_histogram'] = plot_path
+            
+            
+            run_dictionary[plate]['raw_file_stats']['num_sequences'] = stats_dictionary['num_sequences']
+            run_dictionary[plate]['raw_file_stats']['mean_length'] = stats_dictionary['mean_length']
+            run_dictionary[plate]['raw_file_stats']['median_length'] = stats_dictionary['median_length']
+            run_dictionary[plate]['raw_file_stats']['min_length'] = stats_dictionary['min_length']
+            run_dictionary[plate]['raw_file_stats']['max_length'] = stats_dictionary['max_length']
+            run_dictionary[plate]['raw_file_stats']['length_std'] = stats_dictionary['length_std']
+            
+            
+            
+    #write to json file
+    write_json_file(run_dictionary,run_json_file_path)
+    print("#########")
+    print(f"raw fastq stats and length histogram completed.")
+    print(f"Check json file for updated stats on plates and histogram paths.")
         
-    run_dictionary[plate]['raw_file_stats']['num_sequences'] = plate_raw_stats_dictionary['num_sequences']
-    run_dictionary[plate]['raw_file_stats']['mean_length'] = plate_raw_stats_dictionary['mean_length']
-    run_dictionary[plate]['raw_file_stats']['median_length'] = plate_raw_stats_dictionary['median_length']
-    run_dictionary[plate]['raw_file_stats']['min_length'] = plate_raw_stats_dictionary['min_length']
-    run_dictionary[plate]['raw_file_stats']['max_length'] = plate_raw_stats_dictionary['max_length']
-    run_dictionary[plate]['raw_file_stats']['length_std'] = plate_raw_stats_dictionary['length_std']
-    
-    
-    write_json_file(run_dictionary,json_file_path)
     return None
-    

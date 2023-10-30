@@ -1,12 +1,64 @@
 # Description: This file contains functions to create visualizations for raw consensus and trimmed reconstructed consensus data.
 
+from .utils import load_json_file, write_json_file, create_folder
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-import utils
 import warnings
 
+
+def fastq_sequence_length_histogram(plate,lengths, stats_dict, output_directory_abs_path:str,show_plot:bool=False): 
+    
+    """
+    Arguments:
+    - plate: name of the plate
+    - lengths: list of lengths of sequences
+    - stats_dict: dictionary with stats of the plate
+    - output_directory_abs_path: absolute path to the output directory
+    
+    Actions:
+    - Plots histogram of sequence lengths
+    - Prints stats dictionary of the plate on the histogram
+    - Saves histogram to output directory
+    - Prints stats dictionary of the plate to console
+    
+    Returns:
+    None
+    """
+
+    
+    #get the legths of sequences, along with some statistics
+    num_sequences = stats_dict["num_sequences"]
+    mean_length = stats_dict["mean_length"]
+    median_length = stats_dict["median_length"]
+    min_length = stats_dict["min_length"]
+    max_length = stats_dict["max_length"]
+    std_length = stats_dict["length_std"]
+    
+    #plot histogram
+    sns.set(rc={"figure.dpi": 300, "savefig.dpi": 300})
+    sns.set_style("white")
+    sns.set_context("paper")
+    sns.set_palette("colorblind")
+    sns.histplot(lengths, bins=100, kde=False)
+    plt.xlabel("Sequence length (bp)")
+    plt.ylabel("Count")
+    plt.title(f"Sequence length histogram for {plate}")
+    
+    #add legend with number of sequences, mean, median, min, max std
+    plt_text = f"number of sequences: {num_sequences}\nmean len: {mean_length:.0f}\nmedian len: {median_length:.0f}\nmin len: {min_length}\nmax len: {max_length}\nlen std: {std_length:.0f}"
+    plt.text(0.95, 0.95, plt_text, verticalalignment='top', horizontalalignment='right', transform=plt.gca().transAxes, fontsize=12)
+    
+    plot_path = os.path.join(output_directory_abs_path,f"{plate}_sequence_length_histogram.png")
+    plt.savefig(plot_path)
+    
+    if show_plot:
+        plt.show()
+    print(f"Sequence length histogram for {plate} saved to {output_directory_abs_path}")
+    
+    plt.close()
+    return plot_path
 
 
 def create_visualizations_raw_consensus(json_file_path:str, visualizations_directory:str):
@@ -39,11 +91,11 @@ def create_visualizations_raw_consensus(json_file_path:str, visualizations_direc
     """
     
     # load json file
-    run_dictionary = utils.load_json_file(json_file_path)
+    run_dictionary = load_json_file(json_file_path)
     run_dictionary["run_info"]["visualization_folder_output_path"] = visualizations_directory
     run_name = run_dictionary["run_info"]["run_name"]
     raw_consensus_csv_path = run_dictionary["run_info"]["run_raw_consensus_csv_file_path"]
-    utils.write_json_file(run_dictionary, json_file_path)
+    write_json_file(run_dictionary, json_file_path)
     
     # check if csv file exists:
     if not os.path.isfile(raw_consensus_csv_path):
@@ -55,7 +107,7 @@ def create_visualizations_raw_consensus(json_file_path:str, visualizations_direc
     
     # create visualizations directory
     raw_consensus_visualizations_directory = os.path.join(visualizations_directory,"raw_consensus_visualizations")
-    utils.create_folder(raw_consensus_visualizations_directory)
+    create_folder(raw_consensus_visualizations_directory)
     
     ##### create run level visualizations #####
     
@@ -134,7 +186,7 @@ def create_visualizations_raw_consensus(json_file_path:str, visualizations_direc
             
             # create visualizations directory for plate
             plate_visualizations_directory = os.path.join(raw_consensus_visualizations_directory,plate)
-            utils.create_folder(plate_visualizations_directory)
+            create_folder(plate_visualizations_directory)
             
             #read_count heatmap and histogram
             # take the columns "well" and "read_count"
@@ -208,11 +260,11 @@ def create_visualizations_trimmed_reconstructed_consensus(json_file_path:str, vi
     
     
     # load json file
-    run_dictionary = utils.load_json_file(json_file_path)
+    run_dictionary = load_json_file(json_file_path)
     run_dictionary["run_info"]["visualization_folder_output_path"] = visualizations_directory
     run_name = run_dictionary["run_info"]["run_name"]
     recon_consensus_csv_path = run_dictionary["run_info"]["run_trimmed_reconstructed_consensus_csv_file_path"]
-    utils.write_json_file(run_dictionary, json_file_path)
+    write_json_file(run_dictionary, json_file_path)
     
     
     # check if csv file exists:
@@ -224,7 +276,7 @@ def create_visualizations_trimmed_reconstructed_consensus(json_file_path:str, vi
     
     # create visualizations directory
     recon_consensus_visualizations_directory = os.path.join(visualizations_directory,"trimmed_recon_consensus_visualizations")
-    utils.create_folder(recon_consensus_visualizations_directory)
+    create_folder(recon_consensus_visualizations_directory)
     
     
     ##### create run level visualizations #####   
@@ -304,7 +356,7 @@ def create_visualizations_trimmed_reconstructed_consensus(json_file_path:str, vi
             
             # create visualizations directory for plate
             plate_visualizations_directory = os.path.join(recon_consensus_visualizations_directory,plate)
-            utils.create_folder(plate_visualizations_directory)
+            create_folder(plate_visualizations_directory)
             
             #read_count heatmap and histogram
             # take the columns "well" and "read_count"

@@ -1,4 +1,4 @@
-from utils import load_json_file, write_json_file, create_folder, get_read_count_from_fasta
+from .utils import load_json_file, write_json_file, create_folder, get_read_count_from_fasta
 from Bio import AlignIO
 from Bio.Align import AlignInfo
 import pandas as pd

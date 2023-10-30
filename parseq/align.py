@@ -1,4 +1,4 @@
-from utils import load_json_file, write_json_file, create_folder, globalize
+from .utils import load_json_file, write_json_file, create_folder, globalize
 import os
 from Bio.Align.Applications import MuscleCommandline
 from Bio.Align.Applications import MafftCommandline

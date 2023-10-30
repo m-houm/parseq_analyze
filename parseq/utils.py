@@ -101,66 +101,6 @@ def fastq_file_read_stats(input_file_abs_path:str):
 
 
 
-def run_fastp_cmd (plate:str,fastp_source_file:str, fastp_output_path:str, length_filtering:tuple, NGS_read_quality_filtering:int):
-    
-    """
-    Arguments:
-    - fastp_source_file: path to the fastq file
-    - fastp_output_path: path to the fastp output folder
-    - length_filtering: tuple with min and max length
-    - NGS_read_quality_filtering: NGS minimum phred quality score
-    
-    Actions:
-    - Runs fastp command
-    
-    Returns:
-    None
-    """
-    # check if input file exists
-    if not os.path.exists(fastp_source_file):
-        raise ValueError(f"File {fastp_source_file} does not exist")
-    
-    # check if output folder exists
-    if not os.path.exists(fastp_output_path):
-        raise ValueError(f"Folder {fastp_output_path} does not exist")
-    
-    plate_output_path = os.path.join(fastp_output_path,plate)
-        
-    cmd=(f"fastp -A -i {fastp_source_file} --length_required {int(length_filtering[0])} --length_limit {int(length_filtering[1])} -o {plate_output_path}.fastq  -j {plate_output_path}.json -h {plate_output_path}.html -q {NGS_read_quality_filtering}").split()
-    print(cmd)
-    subprocess.run(cmd)
-    
-    return None  
-
-
-def freebarcodes_decode_cmd(fastq_path:str, free_barcodes_file:str, decode_output_path:str):
-    
-    """
-    Arguments:
-    - fastq_path: path to the fastq file
-    - free_barcodes_file: path to the freebarcodes file
-    - decode_output_path: path to the output folder
-    
-    Actions:
-    - Runs freebarcodes decode command
-    
-    Returns:
-    None
-    """
-    # check if input file exists
-    if not os.path.exists(fastq_path):
-        raise ValueError(f"File {fastq_path} does not exist")
-    
-    # check if output folder exists
-    if not os.path.exists(decode_output_path):
-        raise ValueError(f"Folder {decode_output_path} does not exist")
-    
-    cmd = f"freebarcodes decode {free_barcodes_file} {fastq_path} --output-dir={decode_output_path}".split()
-    subprocess.run(cmd)
-    
-    return None
-
-
 def get_read_count_from_fasta(fasta_path:str):
     
     """

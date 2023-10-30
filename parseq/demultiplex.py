@@ -1,4 +1,4 @@
-from utils import load_json_file, write_json_file, create_folder, freebarcodes_decode_cmd, globalize
+from .utils import load_json_file, write_json_file, create_folder, globalize
 import pandas as pd
 import os
 from multiprocessing import Pool
@@ -6,6 +6,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import edlib
+import subprocess
 
 
 def pre_demultiplex_json_update(run_json_file_path:str, barcodes_csv_path:str, barcode_search_error:int, fwd_read_constant_sequence_dict:dict):
@@ -118,7 +119,32 @@ def freebarcodes_decode(run_json_file_path, decode_output_path:str):
     return None
              
 
-
+def freebarcodes_decode_cmd(fastq_path:str, free_barcodes_file:str, decode_output_path:str):
+    
+    """
+    Arguments:
+    - fastq_path: path to the fastq file
+    - free_barcodes_file: path to the freebarcodes file
+    - decode_output_path: path to the output folder
+    
+    Actions:
+    - Runs freebarcodes decode command
+    
+    Returns:
+    None
+    """
+    # check if input file exists
+    if not os.path.exists(fastq_path):
+        raise ValueError(f"File {fastq_path} does not exist")
+    
+    # check if output folder exists
+    if not os.path.exists(decode_output_path):
+        raise ValueError(f"Folder {decode_output_path} does not exist")
+    
+    cmd = f"freebarcodes decode {free_barcodes_file} {fastq_path} --output-dir={decode_output_path}".split()
+    subprocess.run(cmd)
+    
+    return None
 
 
 def pooled_separate_freebarcodes_decoded_file_into_wells(run_json_file_path:str,demultiplexed_folder_path:str):
