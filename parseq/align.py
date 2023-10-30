@@ -7,8 +7,6 @@ from multiprocessing import Pool
 
 
 
-
-
 def align_plates(run_json_file_path:str,alignment_output_path:str,alignment_algorithm:str='mafft'):
     
     """

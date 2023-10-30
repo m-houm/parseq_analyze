@@ -147,7 +147,7 @@ def freebarcodes_decode_cmd(fastq_path:str, free_barcodes_file:str, decode_outpu
     return None
 
 
-def pooled_separate_freebarcodes_decoded_file_into_wells(run_json_file_path:str,demultiplexed_folder_path:str):
+def separate_freebarcodes_decoded_file_into_wells(run_json_file_path:str,demultiplexed_folder_path:str):
     
     """
     Arguments:

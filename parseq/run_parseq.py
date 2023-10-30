@@ -1,8 +1,7 @@
-
 from .utils import create_folder, load_json_file
 from .initialize import initialize_run, initialize_run_json_file, raw_fastq_stats_and_length_histograms
 from .raw_file_processing import pre_fastp_update_json_file, run_fastp_on_plates, post_fastp_stats_and_length_histograms
-from .demultiplex import pre_demultiplex_json_update, create_freebarcodes_file, freebarcodes_decode, pooled_separate_freebarcodes_decoded_file_into_wells
+from .demultiplex import pre_demultiplex_json_update, create_freebarcodes_file, freebarcodes_decode, separate_freebarcodes_decoded_file_into_wells
 from .align import align_plates
 from .consensus import get_consensus, pre_trimming_reconstruction_json_update, trim_and_reconstruct_consesnsus
 from .visualizations import create_visualizations_raw_consensus, create_visualizations_trimmed_reconstructed_consensus
@@ -13,11 +12,21 @@ import os.path
 def set_up_run (run_name:str,output_directory:str,plate_naming_scheme:dict,multiprocessing_cores:int=1):
 
     """
-    Sets up the run folder that contains the raw data and the output data
-    Unzips the raw data if it is zipped
-    Copies the raw data to the run folder
-    Gets stats about the raw fastq files
-    creates and updates json with relevant information
+    Arguments:
+    - run_name: name of the run
+    - output_directory: path to the output directory of the run
+    - plate_naming_scheme: dictionary with plate name as key and path to raw data file as value
+    - multiprocessing_cores: number of cores to use for multiprocessing
+    
+    Actions:
+    - Creates the run folder
+    - Creates the raw data folder
+    - Initializes the run and gets the run plates
+    - Creates the run json file
+    - Creates the raw fastq length histograms and gets the stats for each plate
+    
+    Returns:
+    - json_file_path: path to the json file
     """
     
     # create run folder
@@ -48,8 +57,23 @@ def set_up_run (run_name:str,output_directory:str,plate_naming_scheme:dict,multi
     
     
     
-    
+
 def fastp_process(run_json_file_path:str, length_filtering_dict:dict,ngs_read_quality_filtering_dict:dict):
+    
+    """
+    Arguments:
+    - run_json_file_path: path to the run json file
+    - length_filtering_dict: dictionary with plate name as key and length filtering as value
+    - ngs_read_quality_filtering_dict: dictionary with plate name as key and ngs read phred quality filtering as value
+    
+    Actions:
+    - Updates the json file with the fastp output path, length filtering, and ngs read quality filtering
+    - Runs fastp on plates
+    - Creates the post fastp length histograms and gets the stats for each plate
+    
+    Returns:
+    None
+    """
     
     # load json file
     run_dictionary = load_json_file(run_json_file_path)
@@ -72,10 +96,28 @@ def fastp_process(run_json_file_path:str, length_filtering_dict:dict,ngs_read_qu
     
     
     return None
-
-
+    
+    
+    
 
 def demultiplex_plates(run_json_file_path:str,barcodes_csv_path:str, barcode_search_error:int,fwd_read_constant_sequence_dict:dict):
+    
+    """
+    Arguments:
+    - run_json_file_path: path to the run json file
+    - barcodes_csv_path: path to the barcodes csv file
+    - barcode_search_error: number of errors allowed in barcode search (Lev distance between barcode and read)
+    
+    Actions:
+    - Updates the json file with the barcodes csv path and barcode search error
+    - Creates the freebarcodes file (text file with a list of all the barcodes formatted for freebarcodes)
+    - Runs freebarcodes decoding
+    - Creates the demultiplexed output folder
+    - Runs demultiplexing on each plate decoding output
+    
+    Returns:
+    None
+    """
     
     # load json file
     run_dictionary = load_json_file(run_json_file_path) 
@@ -86,7 +128,6 @@ def demultiplex_plates(run_json_file_path:str,barcodes_csv_path:str, barcode_sea
       
     # update json file
     pre_demultiplex_json_update(run_json_file_path, barcodes_csv_path, barcode_search_error, fwd_read_constant_sequence_dict)
-    
     
     # create free barcodes output folder, free barcodes file and run freebarcodes decoding
     # free barcodes file  is a text file with a list of all the barcodes formatted for freebarcodes
@@ -99,12 +140,31 @@ def demultiplex_plates(run_json_file_path:str,barcodes_csv_path:str, barcode_sea
     # create demultiplexed output folder and run demultiplexing on each plate decoding output
     demultiplexed_files_path = os.path.join(output_directory,run_name,"demultiplexed")
     create_folder(demultiplexed_files_path)
-    pooled_separate_freebarcodes_decoded_file_into_wells(run_json_file_path, demultiplexed_files_path)
+    separate_freebarcodes_decoded_file_into_wells(run_json_file_path, demultiplexed_files_path)
     
     return None
-
+    
+    
+    
 
 def align_wells_and_get_consensus (run_json_file_path:str, alignment_algorithm:str, consensus_threshold:float,ambiguous_base:str):
+    
+    """
+    Arguments:
+    - run_json_file_path: path to the run json file
+    - alignment_algorithm: algorithm to use for alignment (either "mafft" or "muscle")
+    - consensus_threshold: threshold for consensus calling
+    - ambiguous_base: ambiguous base to use for consensus calling
+    
+    Actions:
+    - Creates the alignment folder
+    - Aligns plates
+    - Creates the consensus folder
+    - Gets consensus and saves to csv files for run and plate level
+    
+    Returns:
+    None
+    """
     
     # load json file
     run_dictionary = load_json_file(run_json_file_path)
@@ -127,13 +187,23 @@ def align_wells_and_get_consensus (run_json_file_path:str, alignment_algorithm:s
     return None
     
     
-        
     
 
-
-
-
 def trim_and_reconstruct(run_json_file_path:str,trim_dictionary:dict,reconstruct_dictionary:dict):
+    
+    """
+    Arguments:
+    - run_json_file_path: path to the run json file
+    - trim_dictionary: dictionary with plate name as key and trim parameters as value
+    - reconstruct_dictionary: dictionary with plate name as key and reconstruct parameters as value
+    
+    Actions:
+    - Updates the json file with the trim and reconstruct parameters
+    - Trims and reconstructs the consensus, and outputs corresponding csv files
+    
+    Returns:
+    None
+    """
     
    # load json
     run_dictionary = load_json_file(run_json_file_path)
@@ -154,6 +224,21 @@ def trim_and_reconstruct(run_json_file_path:str,trim_dictionary:dict,reconstruct
     
 
 def create_visualizations(run_json_file_path:str, raw_consensus_visualizations:bool,trimmed_reconstructed_visualizations:bool):
+    
+    """
+    Arguments:
+    - run_json_file_path: path to the run json file
+    - raw_consensus_visualizations: boolean indicating whether to create raw consensus visualizations
+    - trimmed_reconstructed_visualizations: boolean indicating whether to create trimmed and reconstructed consensus visualizations
+    
+    Actions:
+    - Creates the visualizations folder
+    - Creates the raw consensus visualizations (if selected)
+    - Creates the trimmed and reconstructed consensus visualizations (if selected)
+    
+    Returns:
+    None
+    """
     
     # load json file
     run_dictionary = load_json_file(run_json_file_path)
