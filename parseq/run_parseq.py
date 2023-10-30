@@ -44,6 +44,7 @@ def set_up_run (run_name:str,output_directory:str,plate_naming_scheme:dict,multi
     # create run json file
     json_file_path = os.path.join(output_directory,run_name,run_name+".json")
     initialize_run_json_file(run_name,output_directory, json_file_path, plate_naming_scheme, run_plates,multiprocessing_cores)
+    print(f"json file for run {run_name} created at {json_file_path}")
     
     # create lengths histograms and get stats for each plate
     raw_fastq_length_histograms_path = os.path.join(output_directory, run_name, "fastq_length_histograms","raw_fastq")

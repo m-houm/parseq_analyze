@@ -389,8 +389,8 @@ def plate_trim_and_reconstruct(raw_consensus_csv_file_path:str, trimmed_reconstr
         # save to csv file
         processed_df.to_csv(trimmed_reconstructed_file_path,index=False)
         
-        print (f"Trimming and reconstruction of consensus sequences completed for {trimmed_reconstructed_file_path}")
-        print (f"Output csv file: {trimmed_reconstructed_file_path}")
+    print (f"Trimming and reconstruction of consensus sequences completed for {trimmed_reconstructed_file_path}")
+    print (f"Output csv file: {trimmed_reconstructed_file_path}")
         
     return None
     
