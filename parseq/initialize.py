@@ -2,8 +2,6 @@ from .utils import copy_file_cmd, unzip_file_cmd, write_json_file, load_json_fil
 from .visualizations import  fastq_sequence_length_histogram 
 import os
 import datetime
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def initialize_run(raw_data_folder:str,plate_naming_scheme:dict): 

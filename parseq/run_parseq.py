@@ -1,8 +1,8 @@
 from .utils import create_folder, load_json_file
 from .initialize import initialize_run, initialize_run_json_file, raw_fastq_stats_and_length_histograms
 from .raw_file_processing import pre_fastp_update_json_file, run_fastp_on_plates, post_fastp_stats_and_length_histograms
-from .demultiplex import pre_demultiplex_json_update, create_freebarcodes_file, freebarcodes_decode, separate_freebarcodes_decoded_file_into_wells
-from .align import align_plates
+from .demultiplex import pre_demultiplex_json_update, create_freebarcodes_file, freebarcodes_decode, separate_freebarcodes_decoded_file_into_wells, check_freebarcodes_installed
+from .align import align_plates, check_alignment_algorithm_installed
 from .consensus import get_consensus, pre_trimming_reconstruction_json_update, trim_and_reconstruct_consesnsus
 from .visualizations import create_visualizations_raw_consensus, create_visualizations_trimmed_reconstructed_consensus
 import os.path 
@@ -130,6 +130,9 @@ def demultiplex_plates(run_json_file_path:str,barcodes_csv_path:str, barcode_sea
     # update json file
     pre_demultiplex_json_update(run_json_file_path, barcodes_csv_path, barcode_search_error, fwd_read_constant_sequence_dict)
     
+    # check if freebarcodes is installed
+    check_freebarcodes_installed()
+    
     # create free barcodes output folder, free barcodes file and run freebarcodes decoding
     # free barcodes file  is a text file with a list of all the barcodes formatted for freebarcodes
     freebarcodes_output_path = os.path.join(output_directory,run_name,"freebarcodes_output")
@@ -172,6 +175,9 @@ def align_wells_and_get_consensus (run_json_file_path:str, alignment_algorithm:s
     # get output directory and run name
     output_directory = run_dictionary["run_info"]["output_directory"]
     run_name = run_dictionary["run_info"]["run_name"]
+    
+    # check if alignment algorithm is installed
+    check_alignment_algorithm_installed(alignment_algorithm)
     
     # create alignment folder
     alignment_folder_path = os.path.join(output_directory,run_name,"aligned")

@@ -3,7 +3,39 @@ import os
 from Bio.Align.Applications import MuscleCommandline
 from Bio.Align.Applications import MafftCommandline
 from multiprocessing import Pool
+import subprocess
 
+
+def check_alignment_algorithm_installed(alignment_algorithm:str):
+    """
+    Checks if alignment algorithm is installed
+    """
+    
+    def check_muscle_installed():
+        try:
+            subprocess.run(["muscle", "-help"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
+        except subprocess.CalledProcessError:
+            print("MUSCLE is not installed or not accessible from the system's PATH. Please install MUSCLE v3.8 and ensure it is in your PATH.")
+            
+    
+    def check_mafft_installed():
+        try:
+            subprocess.run(["mafft", "--help"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
+        except subprocess.CalledProcessError:
+            print("MAFFT is not installed or not accessible from the system's PATH. Please install MAFFT v7.4 and ensure it is in your PATH.")
+            
+    
+    if alignment_algorithm == 'muscle':
+        check_muscle_installed()
+        
+    elif alignment_algorithm == 'mafft':
+        check_mafft_installed()
+        
+    return None
+    
+    
 
 
 

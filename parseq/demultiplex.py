@@ -8,6 +8,17 @@ from Bio.SeqRecord import SeqRecord
 import edlib
 import subprocess
 
+def check_freebarcodes_installed():
+    """
+    Checks if freebarcodes is installed
+    """
+    try:
+        subprocess.run(['freebarcodes', '--version'], check=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    except subprocess.CalledProcessError:
+        print("Freebarcodes is not installed or not accessible from the system's PATH.. Please install freebarcodes v2.1 from https://github.com/hawkjo/freebarcodes")
+    
+    return None
+    
 
 def pre_demultiplex_json_update(run_json_file_path:str, barcodes_csv_path:str, barcode_search_error:int, fwd_read_constant_sequence_dict:dict):
     
