@@ -7,3 +7,6 @@
 !*barcode_map.csv
 !*.py
 !*ipynb
+build/
+dist/
+*.egg-info/

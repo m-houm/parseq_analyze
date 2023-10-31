@@ -23,8 +23,6 @@ setup(
     classifiers=[
     'Development Status :: 4 - Beta',  # Adjust as needed
     'Intended Audience :: Science/Research',
-    'Intended Audience :: Protein Engineers',
-    'Intended Audience :: Bioinformaticians',
     'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
@@ -37,6 +35,6 @@ setup(
     'Topic :: Software Development :: Libraries :: Python Modules',
     'Framework :: Jupyter',
     'Environment :: Console',
-    'Environment :: Jupyter',
+    
 ],
 )

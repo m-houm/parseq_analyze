@@ -7,13 +7,13 @@ ENHANCED VARIANT RETRIEVAL FROM DNA POOL**
 **This python library accompanies our parSEQ technical report. parSEQ is an experimental platform that was developed to ingest bacterial pools of variants -proteins and other- (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. While initially dependent on Illumina sequencing for detailed results, recent advancements in Oxford Nanopore (ONT)’s v14 chemistry and improved basecalling algorithms now position Nanopore sequencing as an effective substitute.**
 
 --------
-```diff
-+ Cite Us
 
-@article{,
+<h2 style="color:green;">Cite Us</h2>
+
+```bibtex
+@article{
 author = {},
 doi = {},
-journal = {},
 keywords = {NGS, High Throughput Biology, Protein Engineering, Cloud Computing, Automation, Sequence-Function Landscapes},,
 title = {{parSEQ: ADVANCED PROBE AND RESCUE SEQUENCING FOR
 ENHANCED VARIANT RETRIEVAL FROM DNA POOL}},
@@ -26,7 +26,7 @@ year = {2023}
 -------
 
 ### parSEQ Workflow
-![parSEQ Process Workflow](docs/images/parseq-process-workflow.png)
+![parSEQ Process Workflow](images/parseq-process-workflow.png)
 
 The figure above describes the parseq process workflow that we have implemented at Adaptyv Biosystems. Refer to our parSEQ technical report section 2.1 (parSEQ Process Description) for a detailed explanation of the process. Note that you can use parSEQ with a different setup. Refer to our parSEQ technical report section 2.2 (Easy Implementation of parSEQ across Labs of Varying Scales) for an overview of the different options available for setting up your own parSEQ process.
 
@@ -36,7 +36,7 @@ The figure above describes the parseq process workflow that we have implemented 
 ### Analyzing parSEQ Results
 
 This library was developed to analyze parSEQ sequencing results. It can be used to analyze sequencing results from both Illumina and Nanopore sequencers. This sequencing library accepts raw sequencing fastq files as input. Each fastq file contains the sequencing output for one 384-well plate. In the figure above, this would be the output from step 3 (Sequencing).
-We intended to make this library available for the sequencing output of both Illumina and Nanopore (including different basecalling options for Nanopore), and such, we purposefully start from one fastq-file per plate.
+This library can be used for analysis of parSEQ sequencing output using both Illumina and Nanopore (including different basecalling options for Nanopore), and such, we purposefully start from one fastq-file per plate. Check input format below to make your raw sequencing file compatible with parSEQ analysis.
 
 -------------------
 
@@ -68,7 +68,7 @@ parSEQ analysis library is intended to be used with a notebook similar to the pr
 
 **Read Demultiplexing**
 - Uses freebarcodes software to assign a barcode to each of the reads in each of the post_fastp fastq files.
-    - Freebarcodes decoding uses barcoding mapping csv
+    - Freebarcodes based decoding uses barcoding mapping csv
     - Freebarcodes decoding does barcode search with error provided
     - Outputs text file for each plate with barcode assigned to each read in /run_directory/freebarcodes_output
 - Separates reads from freebarcodes decoded file into respective well-level fasta files for each plate in /run_directory/demultiplexed/plate
