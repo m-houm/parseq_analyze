@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='parseq',
+    name='parseq_analyze',
     version='0.1.0',
     packages=find_packages(),
     install_requires=[
@@ -19,7 +19,7 @@ setup(
     description='parseq is a python package for the analysis of parSEQ sequencing data',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/m-houm/parseq',
+    url='https://github.com/m-houm/parseq_analyze',
     classifiers=[
     'Development Status :: 4 - Beta',  # Adjust as needed
     'Intended Audience :: Science/Research',
