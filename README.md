@@ -1,10 +1,11 @@
-`parSEQ: ` **ADVANCED PROBE AND RESCUE SEQUENCING FOR
+`parSEQ: ` **PROBE AND RESCUE SEQUENCING FOR ADVANCED
 ENHANCED VARIANT RETRIEVAL FROM DNA POOL**
 ---------
 ### Read our technical report on parSEQ (Link)
 
 
-**parseq_analyze python library accompanies our parSEQ technical report. parSEQ is an experimental platform that was developed to ingest bacterial pools of variants -proteins and other- (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. While initially dependent on Illumina sequencing for detailed results, recent advancements in Oxford Nanopore (ONT)’s v14 chemistry and improved basecalling algorithms now position Nanopore sequencing as an effective substitute.**
+**parSEQ is an experimental pipeline that was developed to ingest bacterial pools of protein variants (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants.parSEQ aims to maximizes the capture of these protein sequence-function data-sets through a sequence- first-screen-later approach. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. parSEQ works with both Illumina and Oxford Nanopore Sequencing (ONT)**
+**parseq_analyze is a python library that accompanies our parSEQ technical report. It is a python based pipeline to analyze parSEQ NGS results. This pipeline integrates multiple open-source libraries and packages, with the primary goal of identifying the consensus DNA sequence in each well that parSEQ investigates.**
 
 --------
 
@@ -35,15 +36,16 @@ The figure above describes the parseq process workflow that we have implemented 
 
 ### Analyzing parSEQ Results
 
-This library was developed to analyze parSEQ sequencing results. It can be used to analyze sequencing results from both Illumina and Nanopore sequencers. This sequencing library accepts raw sequencing fastq files as input. Each fastq file contains the sequencing output for one 384-well plate. In the figure above, this would be the output from step 3 (Sequencing).
-This library can be used for analysis of parSEQ sequencing output using both Illumina and Nanopore (including different basecalling options for Nanopore), and such, we purposefully start from one fastq-file per plate. Check input format below to make your raw sequencing file compatible with parSEQ analysis.
+This library was developed to analyze parSEQ sequencing results. It can be used to analyze sequencing results from both Illumina and Nanopore sequencers. This sequencing library accepts raw sequencing fastq files as input. Each fastq file should contain the sequencing output for one 384-well plate. In the figure above, this would be the output from step 3 (Sequencing).
+As this library can be used for analysis of parSEQ sequencing output using both Illumina and Nanopore (including different basecalling options for Nanopore), we purposefully start from one fastq-file per plate. Check input format below to make your raw sequencing file is compatible with parseq_analyze.
 
 -------------------
 
-#### Input format
+#### Raw sequencing file format
 
-- In case of Illumina paired-end sequencing, please merge the paired-end reads using any opensource tool such as flash or fastp to provide one fastq file per plate. Fastq files should contain only adapter trimmed sequences.
-- In case of Nanopore sequencing, please provide one concatenated fastq file per plate post basecalling. Fastq files should contain only adapter trimmed sequences.
+- In case of Illumina paired-end sequencing, please merge the paired-end reads using any opensource tool such as flash or fastp to provide one fastq file per plate. Fastq files should have the sequencing adapters trimmed before starting parseq_analyze. For illumina sequencing, this automatically performed by the sequencing platform (e.g. MiSeq).
+- In case of Nanopore sequencing, please provide one concatenated fastq file per plate post basecalling. Fastq files should have the sequencing adapters trimmed before starting parseq_analyze. This can be automatically performed on the sequencing platform or using Guppy.
+Special Consideration for ONT sequencing: We recommend basecalling using SUP, v4.2.0 Super accuracy basecalling model with Dorado v0.2.5B. This yields higher accuracy basecalling that guarantees higher confidence in well consensus sequence recall. It’s important to note that Dorado necessitates GPU acceleration. If you lack access to GPU acceleration, Dorado can run on Apple’s silicon chips (M1/2 series).
 
 Provided fastq files can be zipped or unzipped.
 
@@ -51,7 +53,7 @@ Provided fastq files can be zipped or unzipped.
 
 #### Analysis pipeline
 
-parSEQ analysis library is intended to be used with a notebook similar to the provided notebook template (parseq_run_notebook). The analysis pipeline is separated into 5 big sections as portrayed in the notebook. 
+parseq_analyze library is intended to be used with a notebook similar to the provided notebook template (parseq_run_notebook). The analysis pipeline is divided into 5 big sections as portrayed in the notebook. Every analysis run will automatically create a json file that tracks all important metrics of the analysis.
 
 **Setup Run**
 - Ceates a folder with the run name (run directory) in the output directory.
