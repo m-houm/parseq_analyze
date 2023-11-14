@@ -128,7 +128,13 @@ def muscle_alignment_on_plate(input_folder:str, output_folder:str, multiprocessi
         return
     
     # get all fasta file names in the input folder 
-    fasta_file_names = [file for file in os.listdir(input_folder) if file.endswith(".fasta")]
+    demultiplexed_fasta_file_names = [file for file in os.listdir(input_folder) if file.endswith(".fasta")]
+    aligned_fasta_file_names = [file for file in os.listdir(output_folder) if file.endswith(".fasta")]
+    
+    # get fasta file names that are not aligned
+    fasta_file_names = list(set(demultiplexed_fasta_file_names) - set(aligned_fasta_file_names))
+    
+    
     fasta_file_names = sorted(fasta_file_names)
     input_fasta_file_paths = [os.path.join(input_folder,file) for file in fasta_file_names]
     output_fasta_file_paths = [os.path.join(output_folder,file) for file in fasta_file_names]
@@ -172,7 +178,13 @@ def mafft_alignment_on_plate(input_folder:str, output_folder:str, multiprocessin
             handle.write(stdout)
     
     # get all fasta file names in the input folder 
-    fasta_file_names = [file for file in os.listdir(input_folder) if file.endswith(".fasta")]
+    demultiplexed_fasta_file_names = [file for file in os.listdir(input_folder) if file.endswith(".fasta")]
+    aligned_fasta_file_names = [file for file in os.listdir(output_folder) if file.endswith(".fasta")]
+    
+    # get fasta file names that are not aligned
+    fasta_file_names = list(set(demultiplexed_fasta_file_names) - set(aligned_fasta_file_names))
+    fasta_file_names = sorted(fasta_file_names)
+    
     input_fasta_file_paths = [os.path.join(input_folder,file) for file in fasta_file_names]
     output_fasta_file_paths = [os.path.join(output_folder,file) for file in fasta_file_names]
     
