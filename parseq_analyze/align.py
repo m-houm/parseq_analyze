@@ -13,7 +13,7 @@ def check_alignment_algorithm_installed(alignment_algorithm:str):
     
     def check_muscle_installed():
         try:
-            subprocess.run(["muscle", "-help"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["muscle", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
         except subprocess.CalledProcessError:
             print("MUSCLE is not installed or not accessible from the system's PATH. Please install MUSCLE v3.8 and ensure it is in your PATH.")
@@ -21,7 +21,7 @@ def check_alignment_algorithm_installed(alignment_algorithm:str):
     
     def check_mafft_installed():
         try:
-            subprocess.run(["mafft", "--help"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["mafft", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             
         except subprocess.CalledProcessError:
             print("MAFFT is not installed or not accessible from the system's PATH. Please install MAFFT v7.4 and ensure it is in your PATH.")

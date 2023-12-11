@@ -3,9 +3,9 @@
 ### Read our technical report on parSEQ (Link)
 
 
-**parSEQ is an experimental pipeline that was developed to ingest bacterial pools of protein variants (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants.parSEQ aims to maximizes the capture of protein sequence-function data-sets through a sequence- first-screen-later approach. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. parSEQ works with both Illumina and Oxford Nanopore Sequencing (ONT).**
+**parSEQ is an experimental pipeline that was developed to ingest bacterial pools of protein variants (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants. parSEQ aims to maximizes the capture of protein sequence-function data-sets through a sequence- first-screen-later approach. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. parSEQ works with both Illumina and Oxford Nanopore Sequencing (ONT).**
 
-**```parseq_analyze``` is a python library that accompanies our parSEQ technical report. It is a python based pipeline to analyze parSEQ NGS results. This pipeline integrates multiple open-source libraries and packages, with the main goal of identifying the consensus DNA sequence of every well that parSEQ investigates.**
+**```parseq_analyze``` is a python package that accompanies our parSEQ technical report. It is a python based pipeline to analyze parSEQ NGS results. This pipeline integrates multiple open-source packages and modules, with the main goal of identifying the consensus DNA sequence of every well that parSEQ investigates.**
 
 --------
 --------
@@ -38,7 +38,7 @@ The figure above describes the parseq process workflow that we have implemented 
 
 ### Analyzing parSEQ Results
 
-This library was developed to analyze parSEQ sequencing results. It can be used to analyze sequencing results from both Illumina and ONT sequencers. This sequencing library accepts raw sequencing fastq files as input. Each fastq file should contain the sequencing output for one 384-well plate. In the figure above, this would be the output from step 3 (Sequencing).
+This package was developed to analyze parSEQ sequencing results. It can be used to analyze sequencing results from both Illumina and ONT sequencers. parseq-analyze accepts raw sequencing fastq files as input. Each fastq file should contain the sequencing output for one 384-well plate. In the figure above, this would be the output from step 3 (Sequencing).
 As this library can be used for analysis of parSEQ sequencing output using both Illumina and ONT (including different basecalling options for ONT), we purposefully start from one fastq-file per plate. Check input file format below to make your raw sequencing file compatible with parseq_analyze.
 
 -------------------
@@ -108,7 +108,7 @@ parseq_analyze library is intended to be used with a notebook similar to the pro
 ### Installation
 
 
-You may install `parseq_analyze` directly from `PyPI` via:
+You can install `parseq_analyze` directly from `PyPI` via:
 ```
 pip install parseq_analyze
 ```
