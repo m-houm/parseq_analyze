@@ -1,9 +1,9 @@
-`parSEQ: ` **PROBE AND RESCUE SEQUENCING FOR ADVANCED VARIANT RETRIEVAL FROM DNA POOL**
+`parSEQ:` **PROBE AND RESCUE SEQUENCING FOR ADVANCED VARIANT RETRIEVAL FROM DNA POOL**
 ---------
-### Read our technical report on parSEQ (Link)
+### [Read our technical report on parSEQ](https://www.biorxiv.org/content/10.1101/2023.12.12.571337v1)
 
 
-**parSEQ is an experimental pipeline that was developed to ingest bacterial pools of protein variants (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants. parSEQ aims to maximizes the capture of protein sequence-function data-sets through a sequence- first-screen-later approach. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, and supported by automated procedures and Python-based data analysis, parSEQ constitutes an important tool in modern protein engineering processes. parSEQ works with both Illumina and Oxford Nanopore Sequencing (ONT).**
+**parSEQ is an experimental pipeline that was developed to ingest bacterial pools of protein variants (where each variant is encoded on a plasmid in the bacteria), and deliver sequence-verified, individually separated variants. parSEQ aims to maximizes the capture of protein sequence-function data-sets through a sequence- first-screen-later approach. The process begins with the distribution of bacteria from collective pools into separate clonal wells. After this, parSEQ employs a two-level barcoding system for enhanced multiplexing, incorporating both well-specific and plate-specific barcodes. Once barcoded, samples are merged for Next-Generation Sequencing (NGS), after which the NGS data is analyzed to link each variant with its respective well. Operating within a 384-well plate setup, powered by Next-Generation Sequencing, and supported by automated procedures and Python-based data analysis, parSEQ can sample variant pools with high efficiency, low cost, and fast turnaround times. parSEQ works with both Illumina and Oxford Nanopore Sequencing (ONT).**
 
 **```parseq_analyze``` is a python package that accompanies our parSEQ technical report. It is a python based pipeline to analyze parSEQ NGS results. This pipeline integrates multiple open-source packages and modules, with the main goal of identifying the consensus DNA sequence of every well that parSEQ investigates.**
 
@@ -14,12 +14,12 @@
 
 ```bibtex
 @article{
-author = {},
-doi = {},
-keywords = {NGS, High Throughput Biology, Protein Engineering, Cloud Computing, Automation, Sequence-Function Landscapes},,
-title = {{parSEQ: ADVANCED PROBE AND RESCUE SEQUENCING FOR
-ENHANCED VARIANT RETRIEVAL FROM DNA POOL}},
-url = {},
+author = {Moustafa Houmani, Finlay Peterkin, Gerard Antoun, Louis Fischer, Anissa Hammi},
+doi = {10.1101/2023.12.12.571337},
+keywords = {NGS, High Throughput Biology, Protein Engineering, Cloud Computing, Automation, Sequence-Function Landscapes},
+title = {parSEQ: ADVANCED PROBE AND RESCUE SEQUENCING FOR
+ENHANCED VARIANT RETRIEVAL FROM DNA POOL},
+url = {https://www.biorxiv.org/content/10.1101/2023.12.12.571337v1},
 year = {2023}
 }
 ```

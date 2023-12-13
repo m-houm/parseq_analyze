@@ -179,7 +179,7 @@ def post_fastp_stats_and_length_histograms(run_json_file_path:str, histograms_ou
     # write to json file
     write_json_file(run_dictionary,run_json_file_path)
     print("#########")
-    print(f"post fastp stats and length histogram completed.")
-    print(f"Check json file for updated stats on plates and histogram paths.")
+    print("post fastp stats and length histogram completed.")
+    print("check json file for updated stats on plates and histogram paths.")
         
     return None
